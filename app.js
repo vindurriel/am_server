@@ -39,6 +39,8 @@ app.configure('development', function() {
   return app.use(express.errorHandler());
 });
 
+app.get('/', routes.messages.list);
+
 app.get('/messages', routes.messages.list);
 
 app.post('/messages', routes.messages["new"]);

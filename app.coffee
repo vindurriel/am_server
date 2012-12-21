@@ -25,6 +25,7 @@ app.configure('development', ()=>
   app.use(express.errorHandler())
 )
 
+app.get('/', routes.messages.list)
 app.get('/messages', routes.messages.list)
 app.post('/messages', routes.messages.new)
 app.get('/messages/flush',routes.messages.delete)
