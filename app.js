@@ -17,22 +17,22 @@ http = require('http');
 app = express();
 
 app.configure(function() {
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || 30000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(function(req, res, next) {
+    res.contentType('application/json');
+    return next();
+  });
   app.use(app.router);
   app.use(require('less-middleware')({
     src: __dirname + '/public'
   }));
-  app.use(express["static"](path.join(__dirname, 'public')));
-  return app.use(function(req, res, next) {
-    res.contentType('application/json');
-    return next();
-  });
+  return app.use(express["static"](path.join(__dirname, 'public')));
 });
 
 app.configure('development', function() {
@@ -43,11 +43,9 @@ app.get('/', routes.messages.list);
 
 app.get('/messages', routes.messages.list);
 
-app.post('/messages', routes.messages["new"]);
-
-app.get('/messages/flush', routes.messages["delete"]);
-
 app.get('/messages/:id', routes.messages.get);
+
+app.post('/messages', routes.messages["new"]);
 
 app.put('/messages/:id', routes.messages.put);
 

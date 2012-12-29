@@ -4,4 +4,6 @@ files = fs.readdirSync("./routes")
 for f in files
 	if path.extname(f)=='.js' and f!="index.js"
 		name= "./"+f
-		exports[path.basename(f,'.js')]=require(name)
+		module.exports[path.basename(f,'.js')]=require(name)
+module.exports.index= (req,res)=>
+	res.send "please redirect to /messages"

@@ -1,24 +1,26 @@
 var http = require('http');
 var postObject = {
-  "User": "12",
-  "token": "123", //将来验证用
-  "messages": [{
-    "title": "<title>",
-    "description": "<description>",
-    "tags": ["<tag1>", "<tag2>"],
-    "links": ["http://link1", "http://link2"],
-    "pictures": ["http://img1.jpg", "http://img2.jpg"]
-  }]
+  "User": "vindurriel",
+  "Token": "123", //将来验证用
+  "Messages": [{
+    "Title": "标题 3",
+    "Description": "描述3",
+    "Tags": ["sport", "beauty"],
+    "Links": ["http://link1", "http://link2"],
+    "content":"adsfsdfdsfasdffffffffffffffffffffff",
+    "Pictures": ["http://img1.jpg", "http://img2.jpg"],
+  }
+  ]
 };
 
-var userString = JSON.stringify(postObject);
+var userString = JSON.stringify(postObject)
 var headers = {
-  'Content-Type': 'application/json',
-  'Content-Length': userString.length
+  'Content-Type': 'application/json; charset=utf-8',
+  // 'Content-Length': userString.length,
 };
 var options = {
-  host: '192.168.4.182',
-  port: 30000,
+  host: '192.168.4.123',
+  port: 3000,
   path: '/messages',
   method: 'POST',
   headers: headers
@@ -26,7 +28,6 @@ var options = {
 
 var req = http.request(options, function(res) {
   res.setEncoding('utf-8');
-
   var responseString = '';
 
   res.on('data', function(data) {
@@ -40,5 +41,6 @@ var req = http.request(options, function(res) {
 req.on('error', function(e) {
   throw e;
 });
+console.log (userString)
 req.write(userString);
 req.end();

@@ -2,8 +2,8 @@ mongo=require('mongodb')
 Server = mongo.Server
 Db = mongo.Db
 BSON = mongo.BSONPure
-server = new Server('localhost', 27017, {auto_reconnect: true})
-db = new Db('test', server)
+server = new Server 'localhost', 27017, {auto_reconnect:true}
+db = new Db 'test', server
 module.exports.db=db
 db.open (err, db)=>
   if (!err)
