@@ -9,7 +9,7 @@
     "express": "*",
     "jade": "*",
     "less-middleware": "*",
-    "mongodb":"*",
-    "supervisor":"*",
+    "mongodb": "*",
+    "supervisor": "*",
   }
 }

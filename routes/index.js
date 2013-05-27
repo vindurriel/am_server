@@ -17,5 +17,7 @@ for (_i = 0, _len = files.length; _i < _len; _i++) {
 }
 
 module.exports.index = function(req, res) {
-  return res.send("please redirect to /messages");
+  return res.render("net", {
+    "title": "asdf"
+  });
 };

@@ -24,10 +24,6 @@ app.configure(function() {
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(function(req, res, next) {
-    res.contentType('application/json');
-    return next();
-  });
   app.use(app.router);
   app.use(require('less-middleware')({
     src: __dirname + '/public'
@@ -40,6 +36,8 @@ app.configure('development', function() {
 });
 
 app.get('/', routes.messages.list);
+
+app.get('/index', routes.index);
 
 app.get('/messages', routes.messages.list);
 

@@ -6,4 +6,4 @@ for f in files
 		name= "./"+f
 		module.exports[path.basename(f,'.js')]=require(name)
 module.exports.index= (req,res)=>
-	res.send "please redirect to /messages"
+	res.render "net", {"title":"asdf"}

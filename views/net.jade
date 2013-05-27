@@ -1,0 +1,17 @@
+extends layout
+block content 
+    script(src="/javascripts/d3.v3.min.js",charset="utf-8")
+    link(rel="stylesheet",href="/stylesheets/style_net.css")
+    style(type="text/css")
+      .node {
+      cursor: pointer;
+      stroke: #000;
+      stroke-width: .5px;
+      }
+
+      .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 1.5px;
+      }
+    script(src="/javascripts/forced_tree_view.js")

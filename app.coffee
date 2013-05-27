@@ -15,9 +15,9 @@ app.configure  ()=>
   app.use(express.logger('dev'))
   app.use(express.bodyParser())
   app.use(express.methodOverride())
-  app.use (req, res, next)=>
-    res.contentType('application/json')
-    next() 
+  # app.use (req, res, next)=>
+  #   res.contentType('application/json')
+  #   next() 
   app.use(app.router)
   app.use(require('less-middleware')({ src: __dirname + '/public' }))
   app.use(express.static(path.join(__dirname, 'public')))
@@ -27,6 +27,7 @@ app.configure 'development', ()=>
 
 #routes 
 app.get('/', routes.messages.list)
+app.get('/index', routes.index)
 app.get('/messages', routes.messages.list)
 app.get('/messages/:id', routes.messages.get)
 app.post('/messages', routes.messages.new)

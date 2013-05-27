@@ -19,8 +19,8 @@ var headers = {
   // 'Content-Length': userString.length,
 };
 var options = {
-  host: '192.168.4.123',
-  port: 3000,
+  host: '192.168.4.182',
+  port: 30000,
   path: '/messages',
   method: 'POST',
   headers: headers
