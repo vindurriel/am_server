@@ -6,4 +6,4 @@ for f in files
 		name= "./"+f
 		module.exports[path.basename(f,'.js')]=require(name)
 module.exports.index= (req,res)=>
-	res.render "net", {"title":"asdf"}
+	res.render "net", {"title":"惯性力场树"}

@@ -18,6 +18,6 @@ for (_i = 0, _len = files.length; _i < _len; _i++) {
 
 module.exports.index = function(req, res) {
   return res.render("net", {
-    "title": "asdf"
+    "title": "惯性力场树"
   });
 };

@@ -4,7 +4,25 @@ var w = 1280,
   link,
   root,
   force;
-var vis = d3.select("body").append("svg:svg")
+
+var ctrlPressed = false;
+var shiftPressed = false;
+Array.prototype.remove = function(b) {
+  var a = this.indexOf(b);
+  if (a >= 0) {
+    this.splice(a, 1);
+    return true;
+  }
+  return false;
+};
+function cacheIt(e) {
+  ctrlPressed = e.ctrlKey;
+  shiftPressed = e.shiftKey;
+}
+document.onkeydown = cacheIt;
+document.onkeyup = cacheIt;
+
+var vis = d3.select("body").insert("svg:svg","#tip")
   .attr("width", w)
   .attr("height", h)
   .attr("pointer-events", "all")
@@ -15,7 +33,7 @@ var vis = d3.select("body").append("svg:svg")
 vis.append('svg:rect')
   .attr('width', w)
   .attr('height', h)
-  .attr('fill', 'white');
+  .attr('fill', 'none');
 
 function redraw() {
   console.log("here", d3.event.translate, d3.event.scale);
@@ -30,7 +48,7 @@ var draw = function(json) {
   force = d3.layout.force()
     .on("tick", tick)
     .charge(function(d) {
-    return d._children ? -d.size / 100 : -80;
+    return d._children ? -d.size / 50 : -80;
   })
     .linkDistance(function(d) {
     return d.target._children ? 100 : 50;
@@ -46,6 +64,7 @@ function update() {
     links = d3.layout.tree().links(nodes);
 
   // Restart the force layout.
+  force.stop();
   force
     .nodes(nodes)
     .links(links)
@@ -58,7 +77,7 @@ function update() {
   });
 
   // Enter any new links.
-  link.enter().insert("line",".node")
+  link.enter().insert("line", ".node")
     .attr("class", "link")
     .attr("x1", function(d) {
     return d.source.x;
@@ -83,15 +102,13 @@ function update() {
     .data(nodes, function(d) {
     return d.id;
   })
-    .style("stroke-width",stroke_width)
+    .style("stroke-width", stroke_width)
     .style("fill", color);
 
 
 
   node.transition()
-    .attr("r", function(d) {
-    return 10 - 1.5 * d.level;
-  });
+    .attr("r", getR);
 
   // Enter any new nodes.
   node.enter().append("svg:circle")
@@ -102,11 +119,9 @@ function update() {
     .attr("cy", function(d) {
     return d.y;
   })
-    .attr("r", function(d) {
-    return 10 - 1.5 * d.level;
-  })
+    .attr("r", getR)
     .style("fill", color)
-    .style("stroke-width",stroke_width)
+    .style("stroke-width", stroke_width)
     .on("click", click)
     .call(force.drag);
 
@@ -119,6 +134,13 @@ function update() {
   node.exit().remove();
 
 
+
+}
+
+function getR(d) {
+  var x = d.level;
+  if (x > 4) x = 4;
+  return 15 - x * 3;
 
 }
 
@@ -146,24 +168,37 @@ function tick() {
 }
 
 // Color leaf nodes orange, and packages white or blue.
-colors = ["#000088","#4678a4","#53b1e3", "#ade2e6", "#aaaaff"];
+colors = ["#000088", "#4678a4", "#53b1e3", "#ade2e6", "#aaaaff"];
 
 function color(d) {
   return colors[d.level % 5];
   // return d._children ? "#ff0000" : d.children ? "#000000" : "#aaddff";
 }
+
 function stroke_width(d) {
-   return d._children ? "2px":  ".5px";
+  return d._children ? "2px" : ".5px";
 }
 // Toggle children on click.
 
 function click(d) {
-  if (d.children) {
-    d._children = d.children;
-    d.children = null;
+  if (ctrlPressed) {
+    if (!d.children) d.children = []
+    d.children.push({
+      name: "new node",
+      size: 1
+    });
+  } else if (shiftPressed) {
+    if (d.parent) {
+      d.parent.children.remove(d);
+    }
   } else {
-    d.children = d._children;
-    d._children = null;
+    if (d.children) {
+      d._children = d.children;
+      d.children = null;
+    } else {
+      d.children = d._children;
+      d._children = null;
+    }
   }
   update();
 }
@@ -174,18 +209,20 @@ function flatten(root) {
   var nodes = [],
     i = 0;
 
-  function recurse(node, level) {
+  function recurse(node, level, parent) {
     node.level = level;
+    node.parent = parent;
     if (node.children)
       node.size = node.children.reduce(function(p, v) {
-        return p + recurse(v, level + 1);
+        return p + recurse(v, level + 1, node);
       }, 0);
-    if (!node.id) node.id = ++i;
+    // if (!node.id) 
+    node.id = ++i;
     nodes.push(node);
     return node.size;
   }
 
-  root.size = recurse(root, 0);
+  root.size = recurse(root, 0, null);
   return nodes;
 }
 
